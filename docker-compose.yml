@@ -3,16 +3,20 @@ services:
   jupyter:
     build:
       dockerfile: ./Dockerfile
+      args:
+        JUPYTER_USERNAME: ${JUPYTER_USERNAME}
+        UID: ${UID}
+        GID: ${GID}
     image: workspace/jupyter
     container_name: jupyter
-    user: root
+    user: ${UID}:${GID}
+    command: jupyter notebook --port ${JUPYTER_PORT} --no-browser --ip=0.0.0.0
     ports:
       - "${JUPYTER_PORT}:8888"
     environment:
       JUPYTER_ENABLE_LAB: ${JUPYTER_ENABLE_LAB}
       JUPYTER_USERNAME: ${JUPYTER_USERNAME}
       JUPYTER_TOKEN: ${JUPYTER_TOKEN}
-      NB_UID: ${NB_UID}
-      NB_GID: ${NB_GID}
     volumes:
-      - ./data:/home/${JUPYTER_USERNAME}/work/data
+      - ./data:/home/${JUPYTER_USERNAME}/data:rw
+      - ./notebooks:/home/${JUPYTER_USERNAME}/notebooks:rw

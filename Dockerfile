@@ -1,24 +1,27 @@
-FROM jupyter/datascience-notebook:python-3.11
- 
-ENV HOME_DIR=/home/$NB_USER
-ENV WORK_DIR=$HOME_DIR/work
- 
-USER root
- 
-RUN ldconfig
+FROM python:3.11.4-bookworm
 
-WORKDIR $WORK_DIR
+ARG JUPYTER_USERNAME
+ARG UID
+ARG GID
+
+USER root
+
+RUN groupadd -g ${GID} jupyteruser
+RUN useradd -g ${GID} -u ${UID} jovyan
 
 # Create the environment
 COPY ./requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
-RUN fix-permissions $HOME_DIR
+# Just incase Jupyter is removed from the requirements file
+RUN pip install jupyter
 
 # Make workbooks the working directory to not cause confusion when working in notebook
 # there will be more parity between what you see in the file explorer -> Docker
-RUN mkdir -p $WORK_DIR/notebooks
-WORKDIR $WORK_DIR/notebooks
+RUN mkdir -p /home/${JUPYTER_USERNAME}/notebooks 
+WORKDIR /home/${JUPYTER_USERNAME}/notebooks
 
-USER $NB_USER
+RUN chown -R ${JUPYTER_USERNAME} /home/${JUPYTER_USERNAME}
+
+USER ${JUPYTER_USERNAME}
 
 EXPOSE 8888
