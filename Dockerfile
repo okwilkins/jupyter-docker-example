@@ -7,7 +7,7 @@ ARG GID
 USER root
 
 RUN groupadd -g ${GID} jupyteruser
-RUN useradd -g ${GID} -u ${UID} jovyan
+RUN useradd -g ${GID} -u ${UID} ${JUPYTER_USERNAME}
 
 # Create the environment
 COPY ./requirements.txt ./requirements.txt
