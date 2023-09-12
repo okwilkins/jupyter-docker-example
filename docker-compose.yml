@@ -10,7 +10,7 @@ services:
     image: workspace/jupyter
     container_name: jupyter
     user: ${UID-1000}:${GID-1000}
-    command: jupyter notebook --port 8888 --no-browser --ip=0.0.0.0
+    command: jupyter notebook --port 8888 --no-browser --ip=0.0.0.0 --notebook-dir ./notebooks
     ports:
       - "${JUPYTER_PORT-8888}:8888"
     environment:
