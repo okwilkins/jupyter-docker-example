@@ -15,6 +15,7 @@ RUN pip install -r requirements.txt
 # Just incase Jupyter is removed from the requirements file
 RUN pip install jupyter
 
+WORKDIR /home/${JUPYTER_USERNAME}
 RUN chown -R ${JUPYTER_USERNAME} /home/${JUPYTER_USERNAME}
 USER ${JUPYTER_USERNAME}
 
